@@ -1,0 +1,2 @@
+https://codeforces.com/gym/102569
+b,c,d,g
