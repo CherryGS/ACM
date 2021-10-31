@@ -1,14 +1,16 @@
 from random import *
 import cyaron as c
 
-n = randint(3, 10)
-m = randint(1, n*2)
+t = randint(10, 20)
 
-s = randint(1, n)-1
 
-print(n, m, s)
-
-g = c.Graph.graph(n, m, directed=True, self_loop=False, repeated_edges=False)
-
-for i in g.iterate_edges():
-    print(i.start-1, i.end-1)
+# lis.sort()
+print(t)
+for i in range(t):
+    n = randint(1, 1000)
+    d = randint(1, 10)
+    lis = [randint(1, 10) for i in range(n)]
+    print(n, d)
+    for i in lis:
+        print(i, end=' ')
+    print()

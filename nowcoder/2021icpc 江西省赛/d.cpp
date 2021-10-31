@@ -24,7 +24,7 @@ ll t, n, d;
 ll a[1000100];
 
 int main() {
-    // freopen("1.in", "r", stdin);
+    freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     cin >> t;
@@ -44,9 +44,9 @@ int main() {
                 tmp = i;
             }
         }
-        if(flag == 1 || d == 1) {
+        if(flag == 1) {
             for(int i=1; i<=n; i++) cout << a[i] << ' ';
-            cout << '\n';
+            cout << endl;
             continue;
         }
         for(int i=0; i<q.size(); i++) {
@@ -76,7 +76,7 @@ int main() {
                 for(int i=1; i<=n; i++) {
                     if(a[i] < val || num<=0) { ans.push_back(a[i]); }
                     else if(a[i] > val){
-                        if(cnt <= 0) {
+                        if(cnt == 0) {
                             ans.push_back(val);
                             cnt = d-2;
                             --num;
@@ -94,7 +94,7 @@ int main() {
                 for(int i=n; i>=1; i--) {
                     if(a[i] != val) {
                         if(num > 0) {
-                            if(cnt <= 0) {
+                            if(cnt == 0) {
                                 cnt = d-2;
                                 b.push_back(val);
                                 --num;
