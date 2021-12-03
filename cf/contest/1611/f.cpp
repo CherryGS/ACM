@@ -20,36 +20,36 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
-ll ksm(ll bs, int x) {
-    ll ans = 1;
-    while(x) { 
-        if(x&1) ans = ans * bs % mod2;
-        bs = bs * bs % mod2;
-        x >>= 1;
-    }
-    return ans;
-}
-
 int n;
-ll p[1000100], c[1000100];
+ll s;
+ll a[200200];
 
 int main() {
-    //freopen("1.in", "r", stdin);
+    // freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
-    // std::cin >> T_;
+    std::cin >> T_;
     for(int _T=1; _T<=T_; _T++) {
-        cin >> n;
-        ll sum = 0;
-        for(int i=1; i<=n; i++) cin >> p[i] >> c[i];
-        for(int i=1; i<=n; i++) sum += c[i];
-        ll ans = 0;
+        cin >> n >> s;
+        for(int i=1; i<=n; i++) cin >> a[i];
+        for(int i=1; i<=n; i++) a[i] += a[i-1];
+        int r = 1, ans = -1, lst = -inf_int;
+        int al, ar;
         for(int i=1; i<=n; i++) {
-            ans += (ksm(p[i], sum) * ksm(sum, mod2-2) % mod2 * c[i]) % mod2;
-            ans %= mod2;
+            if(r < i) { r = i; lst = -inf_int; }
+            if(-a[i-1] >= lst && a[i]-a[i-1]+s >= 0) {
+                while(r <= n && a[r]-a[i-1]+s >= 0) ++r;
+                if(r-i+1 > ans) {
+                    ans = r-i+1;
+                    al = i;
+                    ar = r-1;
+                }
+                lst = -a[i-1];
+            }
         }
-        cout << ans << endl;
+        if(ans <= 0) cout << -1 << endl;
+        else cout << al << ' ' << ar << endl;
     }
     return 0;
 }

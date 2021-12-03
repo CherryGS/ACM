@@ -20,36 +20,30 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
-ll ksm(ll bs, int x) {
-    ll ans = 1;
-    while(x) { 
-        if(x&1) ans = ans * bs % mod2;
-        bs = bs * bs % mod2;
-        x >>= 1;
-    }
-    return ans;
-}
+ll x1, p1, x2, p2;
 
-int n;
-ll p[1000100], c[1000100];
+
+void solve(cint T) {
+    cin >> x1 >> p1 >> x2 >> p2;
+    p1 -= p2;
+    if(p1 > 10) cout << '>' << endl;
+    else if(p1 < -10) cout << '<' << endl;
+    else {
+        if(p1 > 0) while(p1) { x1 *= 10; --p1; }
+        if(p1 < 0) while(p1) { x2 *= 10; ++p1; }
+        if(x1 < x2) cout << '<' << endl;
+        else if(x1 == x2) cout << '=' << endl;
+        else cout << '>' << endl;
+    }
+}
 
 int main() {
     //freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
-    // std::cin >> T_;
-    for(int _T=1; _T<=T_; _T++) {
-        cin >> n;
-        ll sum = 0;
-        for(int i=1; i<=n; i++) cin >> p[i] >> c[i];
-        for(int i=1; i<=n; i++) sum += c[i];
-        ll ans = 0;
-        for(int i=1; i<=n; i++) {
-            ans += (ksm(p[i], sum) * ksm(sum, mod2-2) % mod2 * c[i]) % mod2;
-            ans %= mod2;
-        }
-        cout << ans << endl;
-    }
+    std::cin >> T_;
+    for(int _T=1; _T<=T_; _T++)
+        solve(_T);
     return 0;
 }

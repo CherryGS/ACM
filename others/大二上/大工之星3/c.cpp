@@ -20,11 +20,32 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
+int n, m, p;
+vector<vector<int> > a(n, vector<int>(n));
+
 void solve(cint T) {
-    cout << "int: " << sizeof(int) << "字节" << endl;
-    cout << "long long: " << sizeof(long long) << "字节" << endl;
-    cout << "char: " << sizeof(char) << "字节" << endl;
-    cout << "bool: " << sizeof(bool) << "字节" << endl;
+    cin >> n >> m >> p;
+    for(int i=0; i<n; i++)
+        for(int j=0; j<n; j++)
+            cin >> a[i][j];
+    int det = 1;
+    for (int i = 0; i < n; ++i) {
+        int k = i;
+        for (int j = i + 1; j < n; ++j)
+            if (abs(a[j][i]) > abs(a[k][i])) k = j;
+        if (abs(a[k][i]) == 0) {
+            det = 0;
+            break;
+        }
+        swap(a[i], a[k]);
+        if (i != k) det = -det;
+        det *= a[i][i];
+        for (int j = i + 1; j < n; ++j) a[i][j] /= a[i][i];
+        for (int j = 0; j < n; ++j)
+            if (j != i && abs(a[j][i]) > 0)
+            for (int k = i + 1; k < n; ++k) a[j][k] -= a[i][k] * a[j][i];
+    }
+
 }
 
 int main() {
@@ -32,7 +53,7 @@ int main() {
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
-    // std::cin >> T_;
+    std::cin >> T_;
     for(int _T=1; _T<=T_; _T++)
         solve(_T);
     return 0;

@@ -20,11 +20,38 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
+int n, q;
+char s[100100];
+
+bool check(cint i) {
+    return s[i] == 'a' && s[i+1] == 'b' && s[i+2] == 'c';
+}
+
 void solve(cint T) {
-    cout << "int: " << sizeof(int) << "字节" << endl;
-    cout << "long long: " << sizeof(long long) << "字节" << endl;
-    cout << "char: " << sizeof(char) << "字节" << endl;
-    cout << "bool: " << sizeof(bool) << "字节" << endl;
+    cin >> n >> q;
+    cin >> s;
+    int r = 0;
+    for(int i=0; i<n; i++) {
+        if(i <= n-3) {
+            if(check(i)) ++ r;
+        }
+    }
+    int x;
+    char t;
+    for(int i=1; i<=q; i++) {
+        cin >> x >> t;
+        --x;
+        if(s[x] != t) {
+            if(x <= n-3) r -= check(x);
+            if(x <= n-2 && x >= 1) r -= check(x-1);
+            if(x <= n-1 && x >= 2) r -= check(x-2);
+            s[x] = t;
+            if(x <= n-3) r += check(x);
+            if(x <= n-2 && x >= 1) r += check(x-1);
+            if(x <= n-1 && x >= 2) r += check(x-2);
+        }
+        cout << r << endl;
+    }
 }
 
 int main() {
