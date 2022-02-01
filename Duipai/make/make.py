@@ -1,16 +1,11 @@
-from random import *
-import cyaron as c
+from random import randint
 
-t = randint(10, 20)
+T = 1
+print(T)
 
+for i in range(T):
+    n = randint(1, 10)
+    print(n)
 
-# lis.sort()
-print(t)
-for i in range(t):
-    n = randint(1, 1000)
-    d = randint(1, 10)
-    lis = [randint(1, 10) for i in range(n)]
-    print(n, d)
-    for i in lis:
-        print(i, end=' ')
-    print()
+    lis = [randint(1, n) for _ in range(n)]
+    print(*lis)
