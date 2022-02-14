@@ -50,7 +50,6 @@ bool dfs(cint x) {
 void init() {
     memset(val, -1, sizeof val);
     dfs((1<<10)-1);
-    // cout << check(0b1001001, 0b1000011) << endl;
 }
 
 void solve(cint T) {
@@ -66,7 +65,7 @@ void solve(cint T) {
 }
 
 int main() {
-    freopen("1.in", "r", stdin);
+    //freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
