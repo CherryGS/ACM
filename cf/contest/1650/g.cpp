@@ -23,7 +23,7 @@ const double ept = 1e-9;
 int n, m;
 int s, t;
 vector<int> e[200200];
-bool vis[200200];
+bool ok[200200];
 int dep[200200];
 ll dp[200200];
 
@@ -36,9 +36,20 @@ void bfs() {
         int u = q.front();
         q.pop();
         for(int v: e[u]) {
+            if(v == t && ok[u]) continue;
+            if(dep[v] >= dep[u] + 1 && v == t) { ok[u] = 1; }
             if(dep[v] == dep[u] + 1) { (dp[v] += dp[u]) %= mod1; }
             else if(dep[v] > dep[u] + 1) { dp[v] = dp[u]; q.push(v); dep[v] = dep[u]+1; }
         }
+    }
+}
+
+void clear(bool x) {
+    for(int i=1; i<=n; i++) {
+        if(x) { e[i].clear(); }
+        if(x) { ok[i] = 0; }
+        dp[i] = 0;
+        dep[i] = hf_int;
     }
 }
 
@@ -46,24 +57,17 @@ void solve(cint T) {
     cin >> n >> m;
     cin >> s >> t;
     int u, v;
-    for(int i=1; i<=n; i++) {
-        e[i].clear();
-        vis[i] = 0;
-        dp[i] = 0;
-        dep[i] = hf_int;
-    }
+    clear(1);
     for(int i=1; i<=m; i++) {
         cin >> u >> v;
         e[u].push_back(v);
         e[v].push_back(u);
-        if(u == t) vis[v] = 1;
-        else if(v == t) vis[u] = 1;
     }
     bfs();
     ll ans = dp[t];
-    for(int i=1; i<=n; i++) {
-        if(vis[i] && dep[i] == dep[t]) { ans = (ans + dp[i]) % mod1; }
-    }
+    clear(0);
+    bfs();
+    ans = (ans + dp[t]) % mod1;
     cout << ans << endl;
 }
 

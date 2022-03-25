@@ -14,8 +14,8 @@ int t, n;
 int a[2030];
 vector<int> ans;
 
-int reserve(cint x, cint st) {
-    if(x == 1) return 0;
+void reserve(cint x, cint st) {
+    if(x == 1) return ;
     int loc;
     ans.push_back(x);
     for(int i=x; i>x/2; i--) {
@@ -24,6 +24,7 @@ int reserve(cint x, cint st) {
 }
 
 int main() {
+    ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     cin >> t;
     while(t--) {
         cin >> n;

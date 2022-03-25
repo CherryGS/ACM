@@ -39,8 +39,8 @@ def Check_Path(path, str="No file"):
 def compile_():
     Check_Path("./pre/wa.cpp", "YOUR CODE NEEDED.")
     Check_Path("./pre/ac.cpp", "AC CODE NEEDED.")
-    os.system("g++ ./pre/wa.cpp -std=c++11 -o ./pre/wa.exe")
-    os.system("g++ ./pre/ac.cpp -std=c++11 -o ./pre/ac.exe")
+    os.system("g++ ./pre/wa.cpp -std=c++14 -o ./pre/wa.exe")
+    os.system("g++ ./pre/ac.cpp -std=c++14 -o ./pre/ac.exe")
 
 
 def compair():

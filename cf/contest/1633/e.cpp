@@ -45,14 +45,9 @@ auto kruskal(const ll& x) {
         int v = fd(k.v);
         if(u != v) {
             bcj[u] = v;
-            if(k.w <= now) {
-                ++down;
-                ans -= k.w - now;
-            }
-            else {
-                ++up;
-                ans += k.w - now;
-            }
+            if(k.w <= now) { ++down; }
+            else { ++up; }
+            ans += abs(k.w - now);
         }
     }
     return ans;
@@ -108,7 +103,7 @@ void solve(cint T) {
 }
 
 int main() {
-    //freopen("1.in", "r", stdin);
+    freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
