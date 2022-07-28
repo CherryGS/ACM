@@ -21,7 +21,7 @@ const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
 struct KMP {
-    int pi[2000100]; // 这里大小开到 n+m+1 就可以
+    int pi[1000100]; // 这里大小开到 n+m+1 就可以
     int mx_n;
     void init(char *s, int n) {
         fill(pi, pi+n+1, 0);
@@ -32,40 +32,39 @@ struct KMP {
             if(s[r] == s[i]) { pi[i] = r + 1; }
         }
     }
-    /*
-        pattern + '#' + target
-    */
-    void init_kmp(char target[], char pattern[], char data[]) {
-        int n1 = strlen(target), n2 = strlen(pattern);
-        strcpy(data, pattern);
-        strcpy(data+n2+1, target);
-        data[n2] = '#';
-        init(data, n1+n2+1);
-    }
-    int fd_nx(int i, int le) {
-        while(i < mx_n) { if(pi[i] == le) { return i; } ++i; }
-        return -1;
-    }
-    vector<int> fd_all(int s, int le) {
-        static vector<int> q;
-        while(true) { s = fd_nx(s, le); if(s == -1) { break; } q.push_back(s); ++s;}
-        return q;
-    }
-} A, B;
+} A;
 
-char s1[1000100];
-char s2[1000100];
-char s[2000100];
+char s[1000100];
+vector<int> to[1000100];
+int st[1001000], cnt;
+int ans = 1;
+
+void dfs(int r, int u, int fa) {
+    while(r < cnt && st[r]*2 <= u) { ++r; }
+    st[cnt++] = u;
+    // cout << u << ' ' << fa << ' ' << to[u].size() << ' ' << r << ' ' << cnt << ' ' << st[r] << endl;
+    ans = 1ll * ans * max(1, r) % mod1;
+    for(int &v: to[u]) {
+        if(v != fa) {
+            dfs(r, v, u);
+        }
+    }
+    --cnt;
+}
 
 void solve(cint T) {
-    cin >> s1;
-    cin >> s2;
-    int n1 = strlen(s1), n2 = strlen(s2);
-    A.init_kmp(s1, s2, s);
-    B.init(s2, n2);
-    for(auto &k: A.fd_all(n2*2, n2)) { cout << k-n2*2+1 << '\n'; }
-    for(int i=0; i<n2; i++) { cout << B.pi[i] << ' '; }
-    cout << '\n';
+    cin >> s;
+    ans = 1;
+    int n = strlen(s);
+    for(int i=0; i<=n; i++) { to[i].clear(); }
+    A.init(s, n);
+    // for(int i=0; i<n; i++) { cout << A.pi[i] << ' '; }
+    // cout << endl;
+    for(int i=0; i<n; i++) {
+        to[A.pi[i]].push_back(i+1);
+    }
+    dfs(0, 0, 0);
+    cout << ans << '\n';
 }
 
 int main() {
@@ -73,7 +72,7 @@ int main() {
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
-    //std::cin >> T_;
+    std::cin >> T_;
     for(int _T=1; _T<=T_; _T++)
         solve(_T);
     return 0;

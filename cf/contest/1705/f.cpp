@@ -23,6 +23,13 @@ const double ept = 1e-9;
 int n;
 char bs[200200];
 
+int query(int l, int r) {
+    fill(bs+l, bs+r+1, 'F');
+    int r = query();
+    fill(bs+l, bs+r+1, 'T');
+    return r;
+}
+
 int query() {
     for(int i=0; i<n; i++) { cout << bs[i]; }
     cout << endl;
@@ -32,25 +39,17 @@ int query() {
 }
 
 void solve(cint T) {
-    vector<int> id;
     cin >> n;
-    for(int i=0; i<n; i++) { bs[i] = 'T'; id.push_back(i); }
-    random_shuffle(id.begin(), id.end());
+    for(int i=1; i<=n; i++) { bs[i] = 'T'; }
     int lst = query();
-    char st[2] = {'T', 'F'};
-    if(lst < n/2) {
-        for(int i=0; i<n; i++) { bs[i] = 'F'; }
-        lst = query();
-        swap(st[0], st[1]);
+    if(n & 1) {
+        if(query(n, n) < lst) { bs[n] = 'F'; }
+        --n;
     }
-    if(lst == n) { return; }
-    for(int i=0; i<n; i++) {
-        bs[id[i]] = st[1];
-        int now = query();
-        if(now == n) { return; }
-        if(now < lst) { bs[id[i]] = st[0]; }
-        ++lst;
-    }
+    vector<int> id;
+    for(int i=1; i<=n; i++) { id.push_back(i); }
+    random_shuffle(id.begin(), id.end());
+    
 }
 
 int main() {

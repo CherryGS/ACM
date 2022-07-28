@@ -20,16 +20,22 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
-struct KMP {
-    int pi[2000100]; // 这里大小开到 n+m+1 就可以
+struct EXKMP {
+    int z[40004000]; // 这里大小开到 n+m+1 就可以
     int mx_n;
     void init(char *s, int n) {
-        fill(pi, pi+n+1, 0);
         mx_n = n;
+        int l = 0, r = 0;
+        z[0] = n;
         for(int i=1; i<n; i++) {
-            int r = pi[i-1];
-            while(r && s[r] != s[i]) { r = pi[r-1]; }
-            if(s[r] == s[i]) { pi[i] = r + 1; }
+            if(i <= r && z[i-l] < r-i+1) {
+                z[i] = z[i-l];
+            }
+            else {
+                z[i] = max(0, r-i+1);
+                while(i+z[i]<n && s[z[i]] == s[i+z[i]]) { ++z[i]; }
+            }
+            if(i+z[i]-1 > r) { r = i + z[i] - 1; l = i; }
         }
     }
     /*
@@ -43,7 +49,7 @@ struct KMP {
         init(data, n1+n2+1);
     }
     int fd_nx(int i, int le) {
-        while(i < mx_n) { if(pi[i] == le) { return i; } ++i; }
+        while(i < mx_n) { if(z[i] == le) { return i; } ++i; }
         return -1;
     }
     vector<int> fd_all(int s, int le) {
@@ -53,19 +59,21 @@ struct KMP {
     }
 } A, B;
 
-char s1[1000100];
-char s2[1000100];
-char s[2000100];
+char a[20002000];
+char b[20002000];
+char c[40002000];
 
 void solve(cint T) {
-    cin >> s1;
-    cin >> s2;
-    int n1 = strlen(s1), n2 = strlen(s2);
-    A.init_kmp(s1, s2, s);
-    B.init(s2, n2);
-    for(auto &k: A.fd_all(n2*2, n2)) { cout << k-n2*2+1 << '\n'; }
-    for(int i=0; i<n2; i++) { cout << B.pi[i] << ' '; }
-    cout << '\n';
+    cin >> a >> b;
+    int n1 = strlen(a), n2 = strlen(b);
+    A.init(b, n2);
+    B.init_kmp(a, b, c);
+    ll ans = 0;
+    for(int i=0; i<n2; i++) { ans ^= 1ll * (i+1) * (A.z[i]+1); }
+    cout << ans << '\n';
+    ans = 0;
+    for(int i=0; i<n1; i++) { ans ^= 1ll * (i+1) * (B.z[n2+1+i]+1); }
+    cout << ans << '\n';
 }
 
 int main() {

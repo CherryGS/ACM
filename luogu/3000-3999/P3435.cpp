@@ -21,10 +21,9 @@ const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
 struct KMP {
-    int pi[2000100]; // 这里大小开到 n+m+1 就可以
+    int pi[1000100]; // 这里大小开到 n+m+1 就可以
     int mx_n;
     void init(char *s, int n) {
-        fill(pi, pi+n+1, 0);
         mx_n = n;
         for(int i=1; i<n; i++) {
             int r = pi[i-1];
@@ -51,25 +50,27 @@ struct KMP {
         while(true) { s = fd_nx(s, le); if(s == -1) { break; } q.push_back(s); ++s;}
         return q;
     }
-} A, B;
+} A;
 
-char s1[1000100];
-char s2[1000100];
-char s[2000100];
+int n;
+char s[1000100];
 
 void solve(cint T) {
-    cin >> s1;
-    cin >> s2;
-    int n1 = strlen(s1), n2 = strlen(s2);
-    A.init_kmp(s1, s2, s);
-    B.init(s2, n2);
-    for(auto &k: A.fd_all(n2*2, n2)) { cout << k-n2*2+1 << '\n'; }
-    for(int i=0; i<n2; i++) { cout << B.pi[i] << ' '; }
-    cout << '\n';
+    cin >> n;
+    cin >> s;
+    A.init(s, n);
+    ll ans = 0;
+    for(int i=0; i<n; i++) {
+        int &r = A.pi[i];
+        if(r == 0) { continue; }
+        while(A.pi[r-1]) { r = A.pi[r-1]; }
+        ans += i+1-r;
+    }
+    cout << ans << '\n';
 }
 
 int main() {
-    freopen("1.in", "r", stdin);
+    //freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;

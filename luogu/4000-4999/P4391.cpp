@@ -35,7 +35,7 @@ struct KMP {
     /*
         pattern + '#' + target
     */
-    void init_kmp(char target[], char pattern[], char data[]) {
+    void kmp(char target[], char pattern[], char data[]) {
         int n1 = strlen(target), n2 = strlen(pattern);
         strcpy(data, pattern);
         strcpy(data+n2+1, target);
@@ -51,25 +51,14 @@ struct KMP {
         while(true) { s = fd_nx(s, le); if(s == -1) { break; } q.push_back(s); ++s;}
         return q;
     }
-} A, B;
-
-char s1[1000100];
-char s2[1000100];
-char s[2000100];
+};
 
 void solve(cint T) {
-    cin >> s1;
-    cin >> s2;
-    int n1 = strlen(s1), n2 = strlen(s2);
-    A.init_kmp(s1, s2, s);
-    B.init(s2, n2);
-    for(auto &k: A.fd_all(n2*2, n2)) { cout << k-n2*2+1 << '\n'; }
-    for(int i=0; i<n2; i++) { cout << B.pi[i] << ' '; }
-    cout << '\n';
+
 }
 
 int main() {
-    freopen("1.in", "r", stdin);
+    //freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
