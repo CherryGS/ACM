@@ -20,16 +20,9 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
-int n;
-int c[100100];
-int ans[100100];
-int num[100100];
-ll mx, sum;
-
 vector<int> to[100100]; // 邻接表
 int son[100100]; // 子树大小
 int bson[100100]; // 重儿子
-int q[100100], cnt;
 
 /* 初始化轻重儿子 */
 void init_tree(int loc, int fa) {
@@ -43,20 +36,16 @@ void init_tree(int loc, int fa) {
     }
 }
 
-void clear() {
-    sum = mx = 0;
-    while(cnt) { --num[q[cnt]]; --cnt; }
-}
+void clear() { }
 
-void ins(int loc) {
-    q[++cnt] = c[loc];
-    ++num[c[loc]];
-    if(num[c[loc]] > mx) { mx = num[c[loc]]; sum = c[loc]; }
-    else if(num[c[loc]] == mx) { sum = sum + c[loc]; }
-}
+/* add current point's contribution  */
+void ins(int loc) { }
+
+/* caculate current point's answer  */
+void cacu_ans(int loc) { }
 
 /* add light subtree's contribution to main process */
-void update(cint loc, cint fa) {
+void update(int loc, int fa) {
     ins(loc);
     for(int v: to[loc]) {
         if(v != fa) { update(v, loc); }
@@ -69,7 +58,7 @@ void sol(int loc, int fa) {
     for(int &v: to[loc]) {
         if(v != fa && v != bson[loc]) {
             sol(v, loc);
-            clear(); // 清空函数
+            clear();
         }
     }
     // big son
@@ -81,22 +70,12 @@ void sol(int loc, int fa) {
         }
     }
     ins(loc);
-    ans[loc] = sum;
+    cacu_ans(loc);
 }
 
 void solve(cint T) {
-    cin >> n;
-    for(int i=1; i<=n; i++) { cin >> c[i]; }
-    for(int i=1; i<n; i++) {
-        int u, v;
-        cin >> u >> v;
-        to[u].push_back(v);
-        to[v].push_back(u);
-    }
     init_tree(1, 1);
     sol(1, 1);
-    for(int i=1; i<=n; i++) { cout << ans[i] << ' '; }
-    cout << '\n';
 }
 
 int main() {

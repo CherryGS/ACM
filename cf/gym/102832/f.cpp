@@ -21,11 +21,11 @@ int val[1050100][18][2];
 int q[100100], cnt;
 ll ans = 0;
 
-void fd_son(cint loc, cint fa) {
+void init_tree(cint loc, cint fa) {
     son[loc] = 1;
     for(int v: to[loc]) {
         if(v != fa) {
-            fd_son(v, loc);
+            init_tree(v, loc);
             son[loc] += son[v];
             if(son[v] > son[bson[loc]]) bson[loc] = v;
         }
@@ -95,7 +95,7 @@ int main() {
         to[u].push_back(v);
         to[v].push_back(u);
     }
-    fd_son(1, 1);
+    init_tree(1, 1);
     sol(1, 1);
     cout << ans << endl;
     return 0;

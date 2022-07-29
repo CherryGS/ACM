@@ -1,19 +1,15 @@
 from random import randint
 from cyaron import Graph
+import random
 
-n = randint(1, 50)
-m = randint(n - 1, 300)
-graph = Graph.UDAG(n, m)
-print(n, m)
-for i in graph.iterate_edges():
-    print(i.start, i.end, randint(0, int(1e8)))
-
-p = randint(1, int(1e6))
-k = randint(p, int(1e7))
-a = randint(1, int(1e8))
-b = randint(1, int(1e8))
-c = randint(1, int(1e8))
-print(p, p, a, b, c)
-
-for i in range(p):
-    print(randint(0, int(1e8)), end=" ")
+n = randint(100000, 100000)
+print(n)
+lis = [_+1 for _ in range(n)]
+for i in lis:
+    print(i, end=" ")
+print()
+G = Graph.tree(n)
+e = [_ for _ in G.iterate_edges()]
+random.shuffle(e)
+for i in e:
+    print(i.start, i.end)

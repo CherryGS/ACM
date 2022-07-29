@@ -30,11 +30,11 @@ void add(cint f, cint t, cint co) {
     w[cnt_] = co;
 }
 
-void fd_son(cint loc, cint fa) {
+void init_tree(cint loc, cint fa) {
     son[loc] = 1;
     for(int i=h[loc]; i; i=nx[i])
         if(to[i] != fa) {
-            fd_son(to[i], loc);
+            init_tree(to[i], loc);
             son[loc] += son[to[i]];
             if(son[to[i]] > son[bson[loc]]) bson[loc] = to[i];
         }
@@ -90,7 +90,7 @@ int main() {
         add(v, u, w);
     }
     for(int i=1; i<=m; i++) cin >> k[i];
-    fd_son(1, 1);
+    init_tree(1, 1);
     solve(1, 1);
     for(int i=1; i<=m; i++) {
         cout << (ans[i] == 1 ? "AYE" : "NAY") << '\n';

@@ -22,8 +22,8 @@ const double ept = 1e-9;
 
 int n;
 int c[100100];
-int ans[100100];
 int num[100100];
+ll ans[100100];
 ll mx, sum;
 
 vector<int> to[100100]; // 邻接表
@@ -52,7 +52,7 @@ void ins(int loc) {
     q[++cnt] = c[loc];
     ++num[c[loc]];
     if(num[c[loc]] > mx) { mx = num[c[loc]]; sum = c[loc]; }
-    else if(num[c[loc]] == mx) { sum = sum + c[loc]; }
+    else if(num[c[loc]] == mx) { sum += c[loc]; }
 }
 
 /* add light subtree's contribution to main process */
@@ -100,7 +100,7 @@ void solve(cint T) {
 }
 
 int main() {
-    //freopen("1.in", "r", stdin);
+    freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;

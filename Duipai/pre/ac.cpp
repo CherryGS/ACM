@@ -1,72 +1,85 @@
 #include <bits/stdc++.h>
-
-#define forn(i, n) for (int i = 0; i < int(n); i++)
-
+#define maxn 1000005
+#define mod 4933
 using namespace std;
-
-struct edge{
-	int v, u, w;
-};
-
-vector<int> pr, rk;
-
-int getp(int a){
-	return a == pr[a] ? a : pr[a] = getp(pr[a]);
+typedef long long LL;
+int read()
+{
+    int f=1,sum=0;char c=getchar();
+    while(c<'0' || c>'9'){if(c=='-') f=-1;c=getchar();}
+    while(c>='0' && c<='9'){sum=sum*10+c-'0';c=getchar();}
+    return sum*f;
 }
-
-bool unite(int a, int b){
-	a = getp(a), b = getp(b);
-	if (a == b) return false;
-	if (rk[a] < rk[b]) swap(a, b);
-	rk[a] += rk[b];
-	pr[b] = a;
-	return true;
+LL readLL()
+{
+    LL f=1,sum=0;char c=getchar();
+    while(c<'0' || c>'9'){if(c=='-') f=-1LL;c=getchar();}
+    while(c>='0' && c<='9'){sum=sum*10+c-'0';c=getchar();}
+    return sum*f;
 }
+int n,col[maxn];
+int head[maxn],to[maxn<<1],nex[maxn<<1],cnt;
+void add(int u,int v)
+{
+    nex[++cnt]=head[u];
+    head[u]=cnt;
+    to[cnt]=v;
+}
+int siz[maxn],son[maxn];
+int dfs1(int x,int fa)
+{
+    siz[x]=1;
+    for(int i=head[x];i;i=nex[i])
+    {
+        if(to[i]==fa) continue;
+        dfs1(to[i],x);
+        if(siz[to[i]]>siz[son[x]]) son[x]=to[i];
+        siz[x]+=siz[to[i]];
+    }
+}
+long long ans[maxn],now_ans=0;
+int tong[maxn],max_col=0;
+void cal(int x,int fa,int type)
+{
+	tong[col[x]]+=type;
+	if(type==1)
+	{
+		if(tong[col[x]]>max_col) max_col=tong[col[x]],now_ans=col[x];
+		else if(tong[col[x]]==max_col) now_ans+=col[x];
+	}
+	for(int i=head[x];i;i=nex[i])
+	if(to[i]!=fa) cal(to[i],x,type);
+}
+void dfs2(int x,int fa,bool del)
+{
+	for(int i=head[x];i;i=nex[i])
+	if(to[i]!=fa && to[i]!=son[x]) dfs2(to[i],x,true);//统计轻儿子
+	
+	if(son[x]!=0) dfs2(son[x],x,false);//统计重儿子
 
-int main() {
-	int n, m;
-	scanf("%d%d", &n, &m);
-	pr.resize(n);
-	rk.resize(n);
-	vector<edge> es(m);
-	forn(i, m){
-		scanf("%d%d%d", &es[i].v, &es[i].u, &es[i].w);
-		--es[i].v, --es[i].u;
-		es[i].w *= 2;
-	}
-	vector<int> ev(1, 0);
-	forn(i, m) forn(j, i + 1) ev.push_back((es[i].w + es[j].w) / 2);
-	sort(ev.begin(), ev.end());
-	ev.resize(unique(ev.begin(), ev.end()) - ev.begin());
-	vector<long long> base;
-	vector<int> cnt;
-	for (int x : ev){
-		sort(es.begin(), es.end(), [&x](const edge &a, const edge &b){
-			int wa = abs(a.w - x);
-			int wb = abs(b.w - x);
-			if (wa != wb) return wa < wb;
-			return a.w > b.w;
-		});
-		forn(i, n) pr[i] = i, rk[i] = 1;
-		long long cur_base = 0;
-		int cur_cnt = 0;
-		for (const auto &e : es) if (unite(e.v, e.u)){
-			cur_base += abs(e.w - x);
-			cur_cnt += x < e.w;
-		}
-		base.push_back(cur_base);
-		cnt.push_back(cur_cnt);
-	}
-	int p, k, a, b, c;
-	scanf("%d%d%d%d%d", &p, &k, &a, &b, &c);
-	int x = 0;
-	long long ans = 0;
-	forn(q, k){
-		if (q < p) scanf("%d", &x);
-		else x = (x * 1ll * a + b) % c;
-		int y = upper_bound(ev.begin(), ev.end(), 2 * x) - ev.begin() - 1;
-		ans ^= (base[y] + (n - 1 - 2 * cnt[y]) * 1ll * (2 * x - ev[y])) / 2;
-	}
-	printf("%lld\n", ans);
-	return 0;
+	for(int i=head[x];i;i=nex[i])
+	    if(to[i]!=fa&&to[i]!=son[x]) cal(to[i],x,1);
+	
+	tong[col[x]]++;
+	if(tong[col[x]]>max_col) max_col=tong[col[x]],now_ans=col[x];
+	else if(tong[col[x]]==max_col) now_ans+=col[x];
+	
+	ans[x]=now_ans;
+    if(del) cal(x,fa,-1),max_col=0,now_ans=0;
+}
+int main()
+{
+    n=read();
+	for(int i=1;i<=n;i++)
+    col[i]=read();
+	for(int i=1;i<n;i++)
+    {
+        int x=read(),y=read();
+        add(x,y);add(y,x);
+    }
+	dfs1(1,0);
+	dfs2(1,0,false);
+	for(int i=1;i<=n;i++)
+	printf("%lld ",ans[i]);
+	putchar('\n');
 }
