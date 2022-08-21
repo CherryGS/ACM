@@ -28,22 +28,22 @@ void add(cint f, cint t, cint co) {
     w[cnt] = co;
 }
 
-int gsiz(cint loc, cint fa) {
+int get_size(cint loc, cint fa) {
     int sum = 1;
     for(int i=h[loc]; i; i=nx[i])
         if(to[i] != fa && !vis[to[i]]) {
             // cout << loc << " --- " << fa << " --- " << sum << ' ' << endl;
-            sum += gsiz(to[i], loc);
+            sum += get_size(to[i], loc);
         }
     return sum;
 }
 
-void gp(cint loc, cint fa) {
+void get_big(cint loc, cint fa) {
     int pre = 0;
     son[loc] = 1;
     for(int i=h[loc]; i; i=nx[i])
         if(to[i] != fa && !vis[to[i]]) {
-            gp(to[i], loc);
+            get_big(to[i], loc);
             pre = max(pre, son[to[i]]);
             son[loc] += son[to[i]];
             if(id) return;
@@ -91,9 +91,9 @@ void sol(cint loc) {
     }
     for(int i=h[loc]; i; i=nx[i]) {
         if(!vis[to[i]]) {
-            snode = gsiz(to[i], loc);
+            snode = get_size(to[i], loc);
             id = 0;
-            gp(to[i], loc);
+            get_big(to[i], loc);
             // cout << to[i] << " ---- " << snode << " --- " << loc << " ---- " << id << endl;
             sol(id);
         }
@@ -115,7 +115,7 @@ int main() {
     int tmp;
     for(int i=1; i<=m; i++) cin >> k[i], mx = max(mx, k[i]);
     snode = n;
-    gp(1, 1);
+    get_big(1, 1);
     sol(id);
     for(int i=1; i<=m; i++) {
         cout << (ans[i] == 1 ? "AYE" : "NAY") << '\n';

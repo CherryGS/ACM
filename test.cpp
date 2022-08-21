@@ -1,78 +1,40 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-std::mt19937 rng(std::random_device{}());
-typedef long double ld;
-typedef long long ll;
-typedef unsigned long long ull;
-typedef const int& cint;
-typedef const ll& cll;
-typedef pair<int, int> pii;
-typedef pair<int, ll> pil;
-
-#define ls (loc<<1)
-#define rs ((loc<<1)|1)
-
-const int mod1 = 1e9+7;
-const int mod2 = 998244353;
-const int mod3 = 19992147;
-const int inf_int = 0x7fffffff;
-const int hf_int = 0x3f3f3f3f;
-const ll inf_ll = 0x7fffffffffffffff;
-const double ept = 1e-9;
-
-const int mx_n = 100;
-int siz;
-struct matrix {
-    ll a[mx_n+1][mx_n+1];
-    matrix() { memset(a, 0, sizeof a); for(int i=1; i<=mx_n; i++) a[i][i] = 1; }
-    matrix(ll b[mx_n+1][mx_n+1]) { for(int i=1; i<mx_n; i++) for(int j=1; j<=mx_n; j++) a[i][j]=b[i][j]; }
-    matrix operator * (const matrix&x) const {
-        ll r[mx_n+1][mx_n+1];
-        memset(r, 0, sizeof r);
-        for(int i=1; i<=siz; i++) 
-            for(int j=1; j<=siz; j++)
-                for(int k=1; k<=siz; k++)
-                    r[i][j] = (r[i][j] + a[i][k]*x.a[k][j]) % mod1;
-        return matrix(r);
-    }
-    void print(int n) {
-        for(int i=1; i<=n; i++) {
-            for(int j=1; j<=n; j++)
-                cout << a[i][j] << ' ';
-            cout << endl;
-        }
-    }
-};
-
-matrix ksm(matrix a, ll b) {
-    // a.print();
-    matrix ans;
-    while(b) {
-        if(b&1) ans = ans * a;
-        a = a*a;
-        b >>= 1;
-    }
-    return ans;
+#include<iostream>
+using namespace std; 
+void uuru(int *p){
+	while(1){ //这个循环用于输入数据 ,第一步； 
+		cin>>*p;
+		if(*p==-1){//用-1来结束输入； 
+			break;
+		}
+		p++;
+	}
 }
-
-int main() {
-    //freopen("1.in", "r", stdin);
-    //cout.flags(ios::fixed); cout.precision(8);
-    ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
-    int T_=1;
-    // std::cin >> T_;
-    int n;
-    ll k;
-    ll tmp[mx_n+1][mx_n+1];
-    memset(tmp, 0, sizeof(tmp));
-    for(int _T=1; _T<=T_; _T++) {
-        cin >> n >> k;
-        for(int i=1; i<=siz; i++)
-            for(int j=1; j<=siz; j++)
-                cin >> tmp[i][j];
-        matrix ans = ksm(matrix(tmp), k);
-        ans.print(n);
-    }
-    return 0;
+void iais(int *p){
+	int i=1,j=1;
+	while(*p != -1){
+		if(*p==-2){
+			(*p)++;
+			continue; 
+		}//如果某数据已被证实是重复数据，则在这里跳过； 
+		while(*(p+i) != -1){
+			if(*p==*(p+i)){
+				j++;
+				*(p+i) = -2;
+			}
+			i++;
+		}
+		if(j!=1){
+			cout<<"数据"<<*p<<"出现重复，重复次数为"<<j<<endl;
+		}
+		i=1; j=1;
+		p++;
+	}
+}
+int main(){
+	using namespace std;
+	int a;
+	uuru(&a);
+	iais(&a);
+	cout<<1<<endl;
+	return 0;
 }

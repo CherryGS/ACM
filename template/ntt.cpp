@@ -21,87 +21,37 @@ const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
 namespace NTT {
-    typedef long long ll;
-
-    /* 常见原根表 */
-    // 998244353 -> 3
     const int P = 998244353, G = 3;
-
-    /* 最大长度 , 保证补充到了 2 的次幂 */
     const int max_le = (1<<21)+1;
-
     int w[max_le], inv[max_le];
-
-    int mod(int x) { return x >= P ? x - P : x; }
-
-    ll ksm(ll bs, int x) {
-        ll ans = 1;
-        while(x) {
-            if(x & 1) { ans = ans * bs % P; }
-            bs = bs * bs % P;
-            x >>= 1;
-        }
-        return ans;
-    }
- 
+    int a[max_le], b[max_le];
+    ll mod(ll x) { return x >= P ? x - P : (x < 0 ? x + P : x); }
+    ll ksm(ll bs, int x) { ll ans = 1; while(x) { if(x & 1) { ans = ans * bs % P; } bs = bs * bs % P; x >>= 1; } return ans; }
     void init(int len) {
         inv[1] = 1;
         for(int i=2;i<=len;i++) { inv[i] = mod(P - 1ll * (P / i) * inv[P%i] % P); }
-        for(int i=1;i<len;i<<=1) {
-            int wn = ksm(G, (P - 1) / (i<<1));
-            for(int j=0, ww=1; j<i; j++, ww=1ll*ww*wn%P) { w[i+j] = ww; }
-        }
+        for(int i=1;i<len;i<<=1) { int wn = ksm(G, (P - 1) / (i<<1)); for(int j=0, ww=1; j<i; j++, ww=1ll*ww*wn%P) { w[i+j] = ww; } }
     }
-    
-    void change(ll y[], int len) {
+    void change(int y[], int len) {
         int i, j, k;
-        for (i = 1, j = len / 2; i < len - 1; i++) {
-            if(i < j) { swap(y[i], y[j]); }
-            k = len / 2;
-            while (j >= k) { j = j - k; k = k / 2; }
-            if(j < k) { j += k; }
-        }
+        for (i = 1, j = len / 2; i < len - 1; i++) { if(i < j) { swap(y[i], y[j]); } k = len / 2; while (j >= k) { j = j - k; k = k / 2; } if(j < k) { j += k; } }
     }
- 
-    void ntt(ll f[], int len, int op) {
+    void ntt(int f[], int len, int op) {
         change(f, len);
-        for(int i=1;i<len;i<<=1){
-            for(int j=0;j<len;j+=i<<1) {
-                for(int k=0;k<i;k++) {
-                    int x = f[j+k], y = 1ll * f[i+j+k]* w[i+k]%P;
-                    f[j+k] = mod(x+y);
-                    f[i+j+k] = mod(x-y+P);
-                }
-            }
-        }
-        if(op == -1) {
-            reverse(&f[1],&f[len]);
-            for(int i=0;i<len;i++) { f[i] = 1ll * f[i] * inv[len] % P; };
-        }
+        for(int i=1;i<len;i<<=1) { for(int j=0;j<len;j+=i<<1) { for(int k=0;k<i;k++) { ll x = f[j+k], y = f[i+j+k]* w[i+k]%P; f[j+k] = mod(x+y); f[i+j+k] = mod(x-y); } } }
+        if(op == -1) { reverse(&f[1],&f[len]); for(int i=0;i<len;i++) { f[i] = 1ll * f[i] * inv[len] % P; } }
     }
-    /* NTT 过程辅助数组 */
-    ll a[max_le], b[max_le];
-
-    void solve(ll x1[], ll x2[], int len1, int len2, ll ans[]) {
-        int len = 1;
-        while(len < (len1 + len2)) { len <<= 1; }
-        init(len);
-        for(int i=0; i<len; i++) {
-            if(i < len1) { a[i] = x1[i]; }
-            else { a[i] = 0; }
-            if(i < len2) { b[i] = x2[i]; }
-            else { b[i] = 0; }
-        }
-        ntt(a, len, 1); ntt(b, len, 1);
-        for(int i=0; i<len; i++) { a[i] = a[i] * b[i] % P; }
-        ntt(a, len, -1);
+    void solve(int x1[], int x2[], int len1, int len2, int ans[]) {
+        int len = 1; while(len < (len1 + len2)) { len <<= 1; } init(len);
+        for(int i=0; i<len; i++) { if(i < len1) { a[i] = x1[i]; } else { a[i] = 0; } if(i < len2) { b[i] = x2[i]; } else { b[i] = 0; } }
+        ntt(a, len, 1); ntt(b, len, 1); for(int i=0; i<len; i++) { a[i] = 1ll * a[i] * b[i] % P; } ntt(a, len, -1);
         for(int i=0; i<len; i++) { ans[i] = a[i]; }
     }
 };
 
 const int MAXN = (1<<21) + 1;
-ll x1[MAXN], x2[MAXN];
-ll sum[MAXN];
+int x1[MAXN], x2[MAXN];
+int sum[MAXN];
 int n, m;
 
 void solve(cint T) {

@@ -32,7 +32,7 @@ for(int i=0; i<n; i++) {
 }
 ```
 
-### 变式 : 线性求解满足某种条件的相等真前后缀的个数 (条件是否成立与前缀函数正相关)
+### 变式 : 线性求解满足某种条件的相等真前后缀的个数 (条件是否成立是单调的)
 
 最基本的做法是倍增 , 运用单调性可以将倍增部分优化掉
 
@@ -40,16 +40,13 @@ for(int i=0; i<n; i++) {
 
 对于某些特殊的条件(如前后缀要求不重叠) , 还有一种常数较小的写法 , 如果可以证明 $i+1$ 的右边界比 $i$ 的右边界至多多 $1$ , 那么先正常求出前缀函数 , 再假设当前已经求出 $0$ 到 $i$ 的答案 , 然后 $i+1$ 的答案就可以用类似 $KMP$ 的过程得到 , 常数会小很多
 
-### 利用前缀函数构建自动机
-
 ## KMP
 
 前缀函数的应用之一
 
 ```cpp
 struct KMP {
-    int pi[2000100]; // 这里大小开到 n+m+1 就可以
-    int mx_n;
+    int mx_n; int pi[2000100]; // 这里大小开到 n+m+1 就可以
     void init(char *s, int n) {
         fill(pi, pi+n+1, 0);
         mx_n = n;
@@ -59,9 +56,7 @@ struct KMP {
             if(s[r] == s[i]) { pi[i] = r + 1; }
         }
     }
-    /*
-        pattern + '#' + target
-    */
+    /* pattern + '#' + target */
     void kmp(char target[], char pattern[], char data[]) {
         int n1 = strlen(target), n2 = strlen(pattern);
         strcpy(data, pattern);

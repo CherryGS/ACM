@@ -2,10 +2,6 @@
 
 字符串 $s[0\cdots n]$﻿ 的 Z 函数 $z[i]$﻿ 被定义为字符串 $s[0\cdots n]$﻿ 和 $s[i\cdots n]$﻿ 的 $LCP$
 
-### 线性求解
-
-
-
 ## EXKMP
 
 ```cpp
@@ -25,9 +21,7 @@ struct EXKMP {
             if(i+z[i]-1 > r) { r = i + z[i] - 1; l = i; }
         }
     }
-    /*
-        pattern + '#' + target
-    */
+    /* pattern + '#' + target */
     void init_kmp(char target[], char pattern[], char data[]) {
         int n1 = strlen(target), n2 = strlen(pattern);
         strcpy(data, pattern);
