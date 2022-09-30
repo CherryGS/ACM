@@ -19,38 +19,24 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
-struct KMP {
-    int pi[2000100]; // 这里大小开到 n+m+1 就可以
-    void init(char *s, int n, int st) {
-        for(int i=st; i<n; i++) {
-            int r = pi[i-1];
-            while(r && s[r] != s[i]) { r = pi[r-1]; }
-            if(s[r] == s[i]) { pi[i] = r + 1; }
-        }
-    }
-} A;
+bool vis[130][130];
 
-int q;
-char s[1000100];
-char t[101];
+void sim() {
+    int x = 0, y = 0;
+    string ans;
+    while(x < 120 && y < 120) {
+        ans += '0' + vis[x][y];
+        vis[x][y] ^= 1;
+        if(vis[x][y] == 1) { ++y; }
+        else { ++x; }
+    }
+    // cout << ans << '\n';
+    for(int i=0; i<120; i++) { cout << vis[2][i]; }
+    cout << '\n';
+}
 
 bool solve(cint T) {
-    cin >> s;
-    int n = strlen(s);
-    cin >> q;
-    A.init(s, n, 1);
-    for(int i=1; i<=q; i++) {
-        cin >> t;
-        int nn = strlen(t);
-        strcpy(s+n, t);
-        A.init(s, n+nn, n);
-        auto pre = A.pi;
-        for(int j=n; j<n+nn; j++) {
-            cout << pre[j] << ' ';
-        }
-        fill(pre+n, pre+n+nn, 0);
-        cout << '\n';
-    }
+    for(int i=1; i<=100000; i++) { sim(); }
     return true;
 }
 

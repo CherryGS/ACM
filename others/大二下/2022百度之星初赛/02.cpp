@@ -19,43 +19,31 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
-struct KMP {
-    int pi[2000100]; // 这里大小开到 n+m+1 就可以
-    void init(char *s, int n, int st) {
-        for(int i=st; i<n; i++) {
-            int r = pi[i-1];
-            while(r && s[r] != s[i]) { r = pi[r-1]; }
-            if(s[r] == s[i]) { pi[i] = r + 1; }
-        }
-    }
-} A;
-
-int q;
-char s[1000100];
-char t[101];
+int n, k;
+int c[100100];
+bool vis[100100];
 
 bool solve(cint T) {
-    cin >> s;
-    int n = strlen(s);
-    cin >> q;
-    A.init(s, n, 1);
-    for(int i=1; i<=q; i++) {
-        cin >> t;
-        int nn = strlen(t);
-        strcpy(s+n, t);
-        A.init(s, n+nn, n);
-        auto pre = A.pi;
-        for(int j=n; j<n+nn; j++) {
-            cout << pre[j] << ' ';
-        }
-        fill(pre+n, pre+n+nn, 0);
-        cout << '\n';
+    cin >> n >> k;
+    for(int i=1; i<=n; i++) { cin >> c[i]; }
+    ll ans = 0;
+    for(int i=1; i<=n; i++) { ans -= 1ll*i*i*c[i]; }
+    priority_queue<pii> e;
+    for(int i=1; i<=k; i++) { e.push({c[i], i}); }
+    for(int i=1; i<=n; i++) {
+        if(k+i <= n) { e.push({c[k+i], k+i}); }
+        auto u = e.top();
+        e.pop();
+        // cout << u.first << ' ';
+        ans += 1ll * (u.first) * (k+i) * (k+i);
     }
+    // cout << endl;
+    cout << ans << '\n';
     return true;
 }
 
 int main() {
-    //freopen("1.in", "r", stdin);
+    freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;

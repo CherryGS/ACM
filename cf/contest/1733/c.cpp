@@ -19,38 +19,29 @@ const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
-struct KMP {
-    int pi[2000100]; // 这里大小开到 n+m+1 就可以
-    void init(char *s, int n, int st) {
-        for(int i=st; i<n; i++) {
-            int r = pi[i-1];
-            while(r && s[r] != s[i]) { r = pi[r-1]; }
-            if(s[r] == s[i]) { pi[i] = r + 1; }
-        }
-    }
-} A;
-
-int q;
-char s[1000100];
-char t[101];
+int n;
+int a[100100];
 
 bool solve(cint T) {
-    cin >> s;
-    int n = strlen(s);
-    cin >> q;
-    A.init(s, n, 1);
-    for(int i=1; i<=q; i++) {
-        cin >> t;
-        int nn = strlen(t);
-        strcpy(s+n, t);
-        A.init(s, n+nn, n);
-        auto pre = A.pi;
-        for(int j=n; j<n+nn; j++) {
-            cout << pre[j] << ' ';
-        }
-        fill(pre+n, pre+n+nn, 0);
-        cout << '\n';
+    cin >> n;
+    for(int i=1; i<=n; i++) { cin >> a[i]; }
+    int mn = inf_int, id;
+    for(int i=1; i<=n; i++) {
+        if(abs(a[i] - a[1]) % 2 == 0 && a[i] <= mn) { mn = a[i]; id = i; }
     }
+    vector<pii> ans;
+    if(id != 1) { ans.push_back({1, id}); }
+    for(int i=2; i<=n; i++) {
+        if(abs(a[i]-a[1]) % 2 == 1) { ans.push_back({1, i}); id = i;}
+    }
+    for(int i=id-1; i>=2; i--) {
+        if(abs(a[i]-a[1]) % 2 == 0) { ans.push_back({i, id}); }
+    }
+    for(int i=n-1; i>id; i--) {
+        if(abs(a[i]-a[1]) % 2 == 0) { ans.push_back({i, n}); }
+    }
+    cout << ans.size() << '\n';
+    for(auto &k: ans) { cout << k.first << ' ' << k.second << '\n'; }
     return true;
 }
 
@@ -59,7 +50,7 @@ int main() {
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
-    // std::cin >> T_;
+    std::cin >> T_;
     for(int _T=1; _T<=T_; _T++) { if(solve(_T) == 0) { break; } }
     return 0;
 }

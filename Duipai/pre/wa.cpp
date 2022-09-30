@@ -13,99 +13,69 @@ typedef pair<int, ll> pil;
 #define ls (loc<<1)
 #define rs ((loc<<1)|1)
 
-const int mod1 = 1e9+7;
-const int mod2 = 998244353;
+const int mod = 1e9+7;
 const int inf_int = 0x7fffffff;
 const int hf_int = 0x3f3f3f3f;
 const ll inf_ll = 0x7fffffffffffffff;
 const double ept = 1e-9;
 
-int n;
-int c[100100];
-int ans[100100];
-int num[100100];
-ll mx, sum;
-
-vector<int> to[100100]; // 邻接表
-int son[100100]; // 子树大小
-int bson[100100]; // 重儿子
-int q[100100], cnt;
-
-/* 初始化轻重儿子 */
-void init_tree(int loc, int fa) {
-    son[loc] = 1;
-    for(int v: to[loc]) {
-        if(v != fa) {
-            init_tree(v, loc);
-            son[loc] += son[v];
-            if(son[v] > son[bson[loc]]) { bson[loc] = v; }
+struct KMP {
+    int pi[1000100]; // 这里大小开到 n+m+1 就可以
+    void init(char *s, int n, int st) {
+        for(int i=st; i<n; i++) {
+            int r = pi[i-1];
+            while(r && s[r] != s[i]) { r = pi[r-1]; }
+            if(s[r] == s[i]) { pi[i] = r + 1; }
         }
     }
-}
+} A;
 
-void clear() {
-    sum = mx = 0;
-    while(cnt) { --num[q[cnt]]; --cnt; }
-}
+int q;
+char s[1000100];
+char t[101];
+int nx[20][1000100];
 
-void ins(int loc) {
-    q[++cnt] = c[loc];
-    ++num[c[loc]];
-    if(num[c[loc]] > mx) { mx = num[c[loc]]; sum = c[loc]; }
-    else if(num[c[loc]] == mx) { sum = sum + c[loc]; }
-}
-
-/* add light subtree's contribution to main process */
-void update(cint loc, cint fa) {
-    ins(loc);
-    for(int v: to[loc]) {
-        if(v != fa) { update(v, loc); }
-    }
-}
-
-/* dsu on tree main process */
-void sol(int loc, int fa) {
-    // light son
-    for(int &v: to[loc]) {
-        if(v != fa && v != bson[loc]) {
-            sol(v, loc);
-            clear(); // 清空函数
+bool solve(cint T) {
+    cin >> s;
+    int n = strlen(s);
+    cin >> q;
+    A.init(s, n, 1);
+    memcpy(nx[0], A.pi, sizeof nx[0]);
+    for(int i=1; i<20; i++) {
+        for(int j=0; j<n; j++) {
+            nx[i][j] = nx[i-1][nx[i-1][j]-1];
         }
     }
-    // big son
-    if(bson[loc]) { sol(bson[loc], loc); }
-    // add light subtree's contribution
-    for(int &v: to[loc]) {
-        if(v != fa && v != bson[loc]) {
-            update(v, loc);
+    for(int i=1; i<=q; i++) {
+        cin >> t;
+        int nn = strlen(t);
+        strcpy(s+n, t);
+        for(int j=n; j<n+nn; j++) {
+            int r = nx[0][j-1];
+            while(r >= n && s[j] != s[r]) { r = nx[0][r-1]; }
+            // cout << r << endl;
+            for(int k=19; k>=0 && s[j] != s[r]; k--) {
+                if(nx[k][r-1]-1 >= 0 && s[j] != s[nx[k][r-1]-1]) { r = nx[k][r-1]; }
+                if(r == 0) { break; }
+            }
+            if(s[j] != s[r]) { r = nx[0][r-1]; }
+            if(s[r] == s[j]) { nx[0][j] = r+1; }
+            else { nx[0][j] = 0; }
         }
+        for(int j=n; j<n+nn; j++) {
+            cout << nx[0][j] << ' ';
+        }
+        cout << '\n';
     }
-    ins(loc);
-    ans[loc] = sum;
-}
-
-void solve(cint T) {
-    cin >> n;
-    for(int i=1; i<=n; i++) { cin >> c[i]; }
-    for(int i=1; i<n; i++) {
-        int u, v;
-        cin >> u >> v;
-        to[u].push_back(v);
-        to[v].push_back(u);
-    }
-    init_tree(1, 1);
-    sol(1, 1);
-    for(int i=1; i<=n; i++) { cout << ans[i] << ' '; }
-    cout << '\n';
+    return true;
 }
 
 int main() {
-    //freopen("1.in", "r", stdin);
+    freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
-    //std::cin >> T_;
-    for(int _T=1; _T<=T_; _T++)
-        solve(_T);
+    // std::cin >> T_;
+    for(int _T=1; _T<=T_; _T++) { if(solve(_T) == 0) { break; } }
     return 0;
 }

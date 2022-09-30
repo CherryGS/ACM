@@ -55,7 +55,7 @@ bool solve(cint T) {
 }
 
 int main() {
-    //freopen("1.in", "r", stdin);
+    freopen("1.in", "r", stdin);
     //cout.flags(ios::fixed); cout.precision(8);
     ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
     int T_=1;
