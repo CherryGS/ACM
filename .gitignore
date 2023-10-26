@@ -4,4 +4,5 @@
 *.out
 Test
 tmp
+temp
 .secret
